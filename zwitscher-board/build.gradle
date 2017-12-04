@@ -5,14 +5,14 @@ jar {
 
 dependencies {
 	compile 'org.springframework.cloud:spring-cloud-starter-config'
-	compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+	compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client')
 
     compile 'org.springframework.boot:spring-boot-starter-aop'
     compile 'org.springframework.retry:spring-retry'
 
-	compile 'org.springframework.cloud:spring-cloud-starter-feign'
-	compile 'org.springframework.cloud:spring-cloud-starter-hystrix'
-	compile 'org.springframework.cloud:spring-cloud-starter-ribbon'
+    compile('org.springframework.cloud:spring-cloud-starter-openfeign')
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-ribbon')
 
     compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compile 'org.springframework.boot:spring-boot-starter-web'
