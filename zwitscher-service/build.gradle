@@ -10,8 +10,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-aop'
     compile 'org.springframework.retry:spring-retry'
 
-    compile("org.springframework.boot:spring-boot-starter-social-twitter")
-
     compile('org.springframework.cloud:spring-cloud-starter-openfeign')
     compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile 'org.twitter4j:twitter4j-core:[4.0,)'
 }

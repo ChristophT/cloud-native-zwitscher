@@ -24,14 +24,11 @@
 package de.qaware.cloud.nativ.zwitscher.service.tweet;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.social.twitter.api.SearchResults;
-import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Repository;
+import twitter4j.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -44,22 +41,27 @@ import static java.util.stream.Collectors.toList;
  */
 @Repository
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SocialZwitscherRepository implements ZwitscherRepository, HealthIndicator {
 
-    private final Twitter twitter;
+    private final Twitter twitter = TwitterFactory.getSingleton();
 
     @Override
     @HystrixCommand(fallbackMethod = "noResults")
     public Collection<ZwitscherMessage> search(String q, int pageSize) {
-        SearchResults results = twitter.searchOperations().search(q, pageSize);
-        return results.getTweets().stream()
-                .map(t -> new ZwitscherMessage(t.getUnmodifiedText()))
-                .collect(toList());
+        Query query = new Query(q);
+        query.setCount(pageSize);
+        try {
+            QueryResult result = twitter.search(query);
+
+            return result.getTweets().stream()
+                    .map(status -> new ZwitscherMessage(status.getText()))
+                    .collect(toList());
+        } catch (TwitterException e) {
+            throw new RuntimeException("Could not read tweets");
+        }
     }
 
     protected Collection<ZwitscherMessage> noResults(String q, int pageSize) {
-        log.warn("Using fallback ZwitscherMessage results.");
         return Collections.emptyList();
     }
 

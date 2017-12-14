@@ -25,7 +25,6 @@ package de.qaware.cloud.nativ.zwitscher.service.tweet;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +44,6 @@ import java.util.Collection;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ZwitscherController {
 
-    private final CounterService counterService;
     private final ZwitscherRepository repository;
 
     /**
@@ -59,9 +57,6 @@ public class ZwitscherController {
     public HttpEntity<Collection<ZwitscherMessage>> tweets(@RequestParam("q") String q,
                                                            @RequestParam(value = "pageSize", required = false, defaultValue = "50")
                                                            int pageSize) {
-        // record some metrics
-        counterService.increment("services.system.tweets.invoked");
-
         // perform the actual call
         Collection<ZwitscherMessage> zwitscherMessages = repository.search(q, pageSize);
         return new ResponseEntity<>(zwitscherMessages, HttpStatus.OK);
